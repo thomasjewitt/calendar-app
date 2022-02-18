@@ -1,6 +1,8 @@
 import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import DateBlock from './DateBlock';
-
+import EventModal from './EventModal';
+import React from 'react';
 
 export default function Calendar(){
     let dates = [];
@@ -10,12 +12,11 @@ export default function Calendar(){
     const today = new Date();
     const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     const offset = firstDayOfMonth.getDay();
-    const daysInCurrentMonth = 28;
-
+    const daysInCurrentMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
     for (var i = 0; i < days.length; i++) {
         dates.push((
             <Grid item xs={1} sx={{textAlign: "center"}}>
-                {days[i]}
+                <Typography>{days[i]}</Typography>
             </Grid>
         ))
     }
@@ -29,14 +30,19 @@ export default function Calendar(){
     }
 
     for (var i = 0; i < daysInCurrentMonth; i++) {
+        var date = new Date(today.getFullYear(), today.getMonth(), i+1)
         dates.push((
             <Grid item xs={1}>
-                <DateBlock date={i+1} />
+                <DateBlock date={date} />
             </Grid>
         ))
     }
 
-    return (<Grid container spacing={2} columns={7}>
-        {dates}
-    </Grid>)
+
+    return ( <React.Fragment>
+                <Grid container spacing={2} columns={7}>
+                    {dates}
+                </Grid>
+                <EventModal />
+            </React.Fragment> );
 }
