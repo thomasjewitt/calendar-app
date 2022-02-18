@@ -2,7 +2,7 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import useStore from '../store';
 import { Button, TextField, Typography } from '@mui/material';
-import { textAlign } from '@mui/system';
+import { useState } from 'react';
 
 const boxStyle = {
     position: 'absolute',
@@ -23,24 +23,41 @@ const fieldStyle = {
     textAlign: "center"
 }
 
+const dateOptions = { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+};
+
 export default function EventModal(){
     const modalShowing = useStore(state => state.modalShowing);
     const hideModal = useStore(state => state.hideModal);
     const date = useStore(state => state.selectedDate);
-    const dateOptions = { 
-        weekday: 'long', 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-    };
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+
+    async function handleSubmit() {
+        const response = await fetch("/events/", {
+            method: "POST",
+            body: JSON.stringify({
+                title: title,
+                description: description,
+                date: date.toISOString().substring(0, 10)
+            })
+        });
+        hideModal();
+        return response.json();
+    }
+    
 
     return (
             <Modal open={modalShowing} onClose={hideModal}>
                 <Box sx={boxStyle}>
                     <Typography sx={fieldStyle} variant="h6">Create event for {date.toLocaleDateString("en-US", dateOptions)}</Typography>
-                    <TextField sx={fieldStyle} label="Title" />
-                    <TextField sx={fieldStyle} label="Description" multiline rows={4}/>
-                    <Button>Create Event</Button>
+                    <TextField sx={fieldStyle} label="Title" onChange={(event) => setTitle(event.target.value)}/>
+                    <TextField sx={fieldStyle} label="Description" multiline rows={4} onChange={(event) => setDescription(event.target.value)}/>
+                    <Button onClick={handleSubmit}>Create Event</Button>
                 </Box>
             </Modal>
             );
