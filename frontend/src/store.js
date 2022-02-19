@@ -11,6 +11,9 @@ const useStore = create((set, get) => ({
         const response = await fetch("/events/", {method: 'GET'});
         set({events: await response.json()});
     },
+    deleteEvent: async (id) => {
+        const response = await fetch("/events/" + id, {method: 'DELETE'});
+    },
     getEventByDate: date => {
         const events = get().events;
         return events[date];

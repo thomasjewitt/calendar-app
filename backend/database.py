@@ -18,6 +18,11 @@ get_events_sql = """
     FROM events;
 """
 
+delete_event_sql = """
+    DELETE FROM events
+    WHERE id = (?);
+"""
+
 
 def create_database_on_startup():
     conn = sqlite3.connect(db_file)
@@ -31,6 +36,14 @@ def insert_event(date: str, title: str, description: str):
     conn = sqlite3.connect(db_file)
     cursor = conn.cursor()
     cursor.execute(create_event_sql, (str(uuid.uuid4()), date, title, description))
+    conn.commit()
+    conn.close()
+
+
+def delete_event(event_id: str):
+    conn = sqlite3.connect(db_file)
+    cursor = conn.cursor()
+    cursor.execute(delete_event_sql, (event_id,))
     conn.commit()
     conn.close()
 

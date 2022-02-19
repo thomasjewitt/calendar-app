@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.responses import Response
-from database import create_database_on_startup, get_all_events, insert_event
+from database import *
 from models import SubmitEvent
 
 app = FastAPI()
@@ -28,5 +28,14 @@ async def create_event(event: SubmitEvent):
     try:
         insert_event(event.date, event.title, event.description)
         return event
+    except Exception as e:
+        return Response(status_code=500, content={"error": e})
+
+
+@app.delete("/events/{event_id}")
+async def remove_event(event_id: str):
+    try:
+        delete_event(event_id)
+        return {}
     except Exception as e:
         return Response(status_code=500, content={"error": e})
