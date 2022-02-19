@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import Response
-from database import *
-from models import SubmitEvent
+from .database import *
+from .models import SubmitEvent
 
 app = FastAPI()
 
