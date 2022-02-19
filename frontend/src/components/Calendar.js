@@ -2,7 +2,8 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import DateBlock from './DateBlock';
 import EventModal from './EventModal';
-import React from 'react';
+import React, { useEffect } from 'react';
+import useStore from '../store';
 
 export default function Calendar(){
     let dates = [];
@@ -13,6 +14,9 @@ export default function Calendar(){
     const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     const offset = firstDayOfMonth.getDay();
     const daysInCurrentMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+    const events = useStore(state => state.events);
+    console.log(events);
+
     for (var i = 0; i < days.length; i++) {
         dates.push((
             <Grid item xs={1} sx={{textAlign: "center"}}>

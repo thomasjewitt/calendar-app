@@ -33,6 +33,7 @@ const dateOptions = {
 export default function EventModal(){
     const modalShowing = useStore(state => state.modalShowing);
     const hideModal = useStore(state => state.hideModal);
+    const getEvents = useStore(state => state.getEvents);
     const date = useStore(state => state.selectedDate);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -44,9 +45,13 @@ export default function EventModal(){
                 title: title,
                 description: description,
                 date: date.toISOString().substring(0, 10)
-            })
+            }),
+            headers: {
+                "content-type": "application/json"
+            }
         });
         hideModal();
+        getEvents();
         return response.json();
     }
     
